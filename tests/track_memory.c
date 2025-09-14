@@ -7,6 +7,7 @@ int main(void) {
   mem = BR_REALLOC(mem, 512);
   mem = BR_REALLOC(mem, 1024);
   BR_FREE(mem);
-  br_malloc_stack_print(0);
+  br_memory_stack_print(0);
+  br_memory_finish();
   return 1;
 }

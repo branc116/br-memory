@@ -5,6 +5,7 @@ int main(void) {
   void* mem = BR_MALLOC(128);
   BR_FREE(mem);
   BR_FREE(mem);
+  br_memory_finish();
   return 0;
 }
 
