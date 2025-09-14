@@ -22,22 +22,27 @@
  *
  * br_memory - track memory allocations and such
  *
- * Example of simple API:
- * ```main.c
+ * */
 
+#if 0
+/* Example of simple API: */
 #define BR_MEMORY_TRACER_IMPLEMENTATION
 #include <br_memory.h>
 
 int main(void) {
   void* mem = BR_MALLOC(128);
   BR_FREE(mem);
-  br_malloc_stack_print(0); // Print information about 1th allocation event
+   /* Print information about 1th allocation event */
+  br_malloc_stack_print(0);
+  /* This should trigger double free fatal error message */
   BR_FREE(mem);
+  return 0;
 }
+#endif
 
- * ```
- * */
-#pragma once
+#if !defined(BR_INCLUDE_BR_MEMORY_H)
+#define BR_INCLUDE_BR_MEMORY_H
+
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -58,41 +63,6 @@ int main(void) {
 
 #if !defined(BR_FREE)
 #  define BR_FREE(PTR) br_free_trace(PTR, __FILE__, __LINE__)
-#endif
-
-/* TODO: ISO C90 does not support ‘_Thread_local’ */
-#if !defined(BR_THREAD_LOCAL)
-#  if (__TINYC__)
-#    define BR_THREAD_LOCAL
-#  else
-#    define BR_THREAD_LOCAL
-#  endif
-#endif
-
-#if !defined(BR_ASSERT)
-#  include <assert.h>
-#  define BR_ASSERT(expr) assert(expr)
-#endif
-
-#if !defined(BR_LOGW)
-#  include <stdio.h>
-/* TODO: anonymous variadic macros were introduced in C99  */
-#  define BR_LOGW(msg, ...) printf("[WARRNING] " msg "\n", ##__VA_ARGS__)
-#endif
-
-#if !defined(BR_LOGE)
-#  include <stdio.h>
-/* TODO: anonymous variadic macros were introduced in C99  */
-#  define BR_LOGE(msg, ...) printf("[ERROR] " msg "\n", ##__VA_ARGS__)
-#endif
-
-#if !defined(BR_LOGF)
-#  include <stdio.h>
-/* TODO: anonymous variadic macros were introduced in C99  */
-#  define BR_LOGF(msg, ...) do { \
-     printf("[FATAL] " msg "\n", ##__VA_ARGS__); \
-     abort(); \
-   } while(0)
 #endif
 
 typedef enum br_malloc_tracker_event_kind_t {
@@ -148,8 +118,47 @@ void  br_free_trace   (void* ptr,                   const char* file_name, int l
 br_malloc_tracker_t br_malloc_tracker_get(void);
 void br_malloc_frame(void);
 void br_malloc_stack_print(int top_nid);
+#endif
 
+/*=======================================*/
+/*            IMPLEMENTATION             */
+/*=======================================*/
 #if defined(BR_MEMORY_TRACER_IMPLEMENTATION)
+
+/* TODO: ISO C90 does not support ‘_Thread_local’ */
+#if !defined(BR_THREAD_LOCAL)
+#  if (__TINYC__)
+#    define BR_THREAD_LOCAL
+#  else
+#    define BR_THREAD_LOCAL
+#  endif
+#endif
+
+#if !defined(BR_ASSERT)
+#  include <assert.h>
+#  define BR_ASSERT(expr) assert(expr)
+#endif
+
+#if !defined(BR_LOGW)
+#  include <stdio.h>
+/* TODO: anonymous variadic macros were introduced in C99  */
+#  define BR_LOGW(msg, ...) printf("[WARRNING] " msg "\n", ##__VA_ARGS__)
+#endif
+
+#if !defined(BR_LOGE)
+#  include <stdio.h>
+/* TODO: anonymous variadic macros were introduced in C99  */
+#  define BR_LOGE(msg, ...) printf("[ERROR] " msg "\n", ##__VA_ARGS__)
+#endif
+
+#if !defined(BR_LOGF)
+#  include <stdio.h>
+/* TODO: anonymous variadic macros were introduced in C99  */
+#  define BR_LOGF(msg, ...) do { \
+     printf("[FATAL] " msg "\n", ##__VA_ARGS__); \
+     abort(); \
+   } while(0)
+#endif
 
 /* malloc tracker must not be tracked by itself because it would create recursive calls. */
 #define br_malloc_da_push_t(SIZE_T, ARR, VALUE) do {                                                                \
