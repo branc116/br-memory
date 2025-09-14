@@ -36,7 +36,7 @@ main.c:8 Realloc to 1024 bytes at Frame 0
 main.c:7 Realloc to 512 bytes at Frame 0
 main.c:6 Realloc to 256 bytes at Frame 0
 --------------------------------
-Current node:
+Curent node:
 main.c:5 Alloc 128 bytes at Frame 0
 =================================
 ```
@@ -59,7 +59,7 @@ int main(void) {
 Output:
 ```
 =================================
-Current node:
+Curent node:
 tests/double_free.c:6 Free 128 bytes at Frame 0
 --------------------------------
 Older node:
@@ -87,7 +87,7 @@ int main(void) {
 Newer nodes:
 tests/bad_realloc.c:6 Realloc to 256 bytes at Frame 0
 --------------------------------
-Current node:
+Curent node:
 tests/bad_realloc.c:5 Alloc 128 bytes at Frame 0
 =================================
 

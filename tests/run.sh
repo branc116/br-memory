@@ -13,7 +13,7 @@ for test in $TESTS; do
   if [ $? != 0 ]; then
     exit 1
   fi
-  ./$OBJ > /dev/null
+  ./$OBJ
   if [ $? != 0 ]; then
     echo "OK: $test"
   else

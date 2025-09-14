@@ -128,7 +128,7 @@ typedef struct br_malloc_tracker_t {
   br_malloc_tracker_node_t* arr;
   size_t len, cap;
 
-  int current_frame;
+  int curent_frame;
   int cur_frame_nodes_len;
 
   size_t total_alloced;
@@ -185,7 +185,7 @@ void* br_malloc_trace(bool zero, size_t size, const char* file_name, int line_nu
   node.at_file_name = file_name;
   node.size = size;
   node.at_line_num = line_num;
-  node.frame_num = br_malloc_tracker.current_frame;
+  node.frame_num = br_malloc_tracker.curent_frame;
   node.next_nid = -1;
   node.prev_nid = -1;
   node.realloc_count = 0;
@@ -241,7 +241,7 @@ void br_malloc_stack_print(int top_nid) {
     }
     printf("--------------------------------\n");
   }
-  printf("Current node:\n");
+  printf("Curent node:\n");
   br_malloc_node_print(node);
   if (node.prev_nid != -1) {
     printf("--------------------------------\n");
@@ -290,7 +290,7 @@ void* br_realloc_trace(void* old, size_t new_size, const char* file_name, int li
       new_node.at_file_name = file_name;
       new_node.size = new_size;
       new_node.at_line_num = line;
-      new_node.frame_num = br_malloc_tracker.current_frame;
+      new_node.frame_num = br_malloc_tracker.curent_frame;
       new_node.next_nid = -1;
       new_node.prev_nid = index;
       new_node.realloc_count = node->realloc_count + 1;
@@ -338,7 +338,7 @@ void br_free_trace(void* old, const char* file_name, int line) {
   new_node.at_file_name = file_name;
   new_node.size = node->size;
   new_node.at_line_num = line;
-  new_node.frame_num = br_malloc_tracker.current_frame;
+  new_node.frame_num = br_malloc_tracker.curent_frame;
   new_node.next_nid = -1;
   new_node.prev_nid = *index;
   new_node.realloc_count = node->realloc_count;
@@ -366,10 +366,10 @@ void br_malloc_frame(void) {
     br_malloc_tracker_frame_t new_frame;
     new_frame.start_nid = br_malloc_tracker.cur_frame_nodes_len;
     new_frame.len = br_malloc_tracker.len - br_malloc_tracker.cur_frame_nodes_len;
-    new_frame.frame_num = br_malloc_tracker.current_frame;
+    new_frame.frame_num = br_malloc_tracker.curent_frame;
     br_malloc_da_push(br_malloc_tracker.frames, new_frame);
   }
-  ++br_malloc_tracker.current_frame;
+  ++br_malloc_tracker.curent_frame;
   br_malloc_tracker.cur_frame_nodes_len = br_malloc_tracker.len;
   br_malloc_tracker.cur_frame_alloced = 0;
   br_malloc_tracker.cur_frame_freed = 0;
